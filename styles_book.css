@@ -1,0 +1,179 @@
+/* Reset some default styles */
+body,
+h1,
+h2,
+p {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+}
+
+/* Header styles */
+header {
+    background-color: #ffffff;
+    color: #506058;
+    padding: 20px 0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.image-section img {
+    max-width: 80%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.clinic-details {
+    max-width: 400px;
+}
+
+.contact-info {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Navigation styles */
+nav {
+    background-color: #008543;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav li {
+    margin: 0 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #ecf0f1;
+}
+
+/* Section styles */
+.section {
+    padding: 60px 0;
+    background-color: #ecf0f1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h2 {
+    color: #008543;
+}
+
+/* Button styles */
+button {
+    background-color: #008543;
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #006634;
+}
+
+/* Footer styles */
+footer {
+    background-color: #008543;
+    color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* Services cards styles */
+.services-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.service-card {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+.service-card h3 {
+    color: #ffffff;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .clinic-details {
+        margin-top: 20px;
+    }
+}
+
+.services-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.service-card {
+    width: 300px;
+    margin: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #008543;
+    color: #ffffff;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.service-card:hover {
+    transform: scale(1.05);
+}
+
+.service-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.service-card h3 {
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+.service-card p {
+    font-size: 16px;
+    margin-top: 10px;
+}

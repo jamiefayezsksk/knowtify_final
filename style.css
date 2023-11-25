@@ -1,0 +1,120 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 20px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.content-container {
+    width: 100%;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    color: #028960;
+}
+
+a {
+    color: #028960;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 10px;
+    width: 100%;
+    margin: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 0;
+    text-align: center;
+    font-weight: bold;
+    width: 90px;
+    /* Make cells square */
+    height: 90px;
+    /* Make cells square */
+    position: relative;
+}
+
+th {
+    background-color: #028960;
+    color: #fff;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+.day-number {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 11px;
+    color: #333;
+    /* Adjust color as needed */
+}
+
+.add-event-btn {
+    display: block;
+    width: 180px;
+    /* Adjust width for a smaller size */
+    height: 30px;
+    /* Adjust height for a smaller size */
+    margin: 20px;
+    /* Adjust margin for spacing */
+    background-color: #028960;
+    color: #fff;
+    text-decoration: none;
+    /* Make it circular */
+    cursor: pointer;
+    text-align: center;
+    text-size-adjust: 10px;
+    line-height: 30px;
+    /* Center the icon vertically */
+}
+
+.event-form {
+    display: none;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    position: absolute;
+    z-index: 1;
+    border-radius: 10px;
+    width: 300px;
+    /* Adjust the width as needed */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.event-form input {
+    margin-bottom: 10px;
+    padding: 10px;
+    width: calc(100% - 20px);
+    /* Adjust the width as needed */
+    box-sizing: border-box;
+}
+
+/* Add a class to apply blur effect */
+.event-form.blurred-background {
+    background: rgba(255, 255, 255, 0.8);
+    /* Make the background slightly transparent */
+    filter: blur(50px);
+    /* Add a blur effect to the form */
+    -webkit-filter: blur(50px);
+    /* For older browsers */
+}

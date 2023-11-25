@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "film": {
+      ".indexOn": ["patient"],
+      ".read": true,
+      ".write": true
+    },
+    "user": {
+      ".indexOn": ["username"],
+      ".read": true,
+      ".write": "auth != null"  // This allows write access only when authenticated
+    }
+
+  }
+}
