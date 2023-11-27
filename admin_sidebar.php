@@ -47,6 +47,7 @@ function getDashboardLink($currentPage)
         .doctor-photo img {
             width: 100%;
             height: 100%;
+            object-fit: cover;
         }
 
         .brand {
@@ -66,7 +67,7 @@ function getDashboardLink($currentPage)
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="doctor-photo">
-                <img src="doct.jpg" alt="Doctor Photo">
+                <img src="admin.png" alt="Doctor Photo">
             </div>
             <h3 class="brand">
                 <span class="ti-unlink"></span>
@@ -77,35 +78,30 @@ function getDashboardLink($currentPage)
 
 
         <div class="sidebar-menu">
+
             <ul>
                 <li>
-                    <a href="<?php echo getDashboardLink($currentPage); ?>">
+                    <a href="admin_dashboard.php">
                         <span class="ti-home"></span>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="appointment.php">
-                        <span class="ti-face-smile"></span>
-                        <span>Appointment</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="schedule.php">
+                    <a href="admin_schedules.php">
                         <span class="ti-agenda"></span>
                         <span>Schedules</span>
                     </a>
                 </li>
                 <li>
-                    <a href="record.php">
-                        <span class="ti-clipboard"></span>
-                        <span>Patient Record</span>
+                    <a href="admin_appointments.php">
+                        <span class="ti-face-smile"></span>
+                        <span>Appointment</span>
                     </a>
                 </li>
                 <li>
-                    <a href="account.php">
-                        <span class="ti-settings"></span>
-                        <span>Account</span>
+                    <a href="admin_record.php">
+                        <span class="ti-clipboard"></span>
+                        <span>Patient Record</span>
                     </a>
                 </li>
             </ul>

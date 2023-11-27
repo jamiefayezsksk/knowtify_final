@@ -1,0 +1,328 @@
+/* Reset some default styles */
+body,
+h1,
+h2,
+p,
+ul,
+li {
+    margin: 0;
+    padding: 0;
+}
+
+/* Set up some basic styling */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+}
+
+/* Colors inspired by Konsulta MD */
+:root {
+    --primary-color: #63962D;
+    /* Light Blue */
+    --secondary-color: #63962D;
+    /* Dark Green */
+    --accent-color: #ffffff;
+    /* White */
+    --text-color: #181515;
+    /* Dark Brown */
+    --background-color: #ecf0f1;
+    /* Light Gray */
+}
+
+#appointment {
+    background-image: url('drr.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--text-color);
+    padding: 220px 0;
+}
+
+#appointment h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #58832b;
+}
+#appointment h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+#appointment p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+/* Additional styles for the about us section */
+#about {
+    padding: 60px 0;
+    text-align: center;
+    background-color: var(--background-color);
+}
+
+#about h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+#about p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+/* Book Appointment button style */
+#book-appointment-button {
+    background-color: var(--secondary-color);
+    color: var(--accent-color);
+    font-weight: bold;
+    padding: 15px 30px;
+    font-size: 20px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+#book-appointment-button:hover {
+    background-color: #ffffff;
+    /* Darker shade for hover */
+}
+
+/* Styles for booking details overlay background */
+.booking-summary-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(5px);
+    z-index: 999;
+}
+
+/* Styles for booking details container */
+.booking-summary-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0px 0px 10px 5px rgba(115, 90, 90, 0.1);
+    z-index: 1000;
+    color: #0b0a0a;
+    /* Text color */
+}
+
+/* Header styles */
+header {
+    background-color: #ffffff;
+    color: #506058;
+    padding: 0px 0;
+    height: 20%;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.image-section img {
+    max-width: 50%;
+    /* Adjusted size to be bigger */
+    display: flex;
+    justify-content: flex-end;
+}
+
+.clinic-details {
+    max-width: 400px;
+}
+
+.contact-info {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Navigation styles */
+nav {
+    background-color: #ffffff;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav li {
+    margin: 0 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #63962D;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #ecf0f1;
+}
+
+/* Section styles */
+.section {
+    padding: 60px 0;
+    background-color: #ecf0f1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h2 {
+    color: #63962D;
+}
+
+/* Button styles */
+button {
+    background-color: #63962D;
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #006634;
+}
+
+/* Footer styles */
+footer {
+    background-color: #008543;
+    color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* Additional Styles for Modern Service Cards */
+.services-container {
+    overflow-x: auto;
+}
+
+.services-cards {
+    display: flex;
+    /* Ensure all items are in a single row */
+    justify-content: space-around;
+    /* Center the items horizontally */
+    padding-bottom: 20px;
+    /* Add some space at the bottom for better visual */
+}
+
+.service-card {
+    width: 400px;
+    margin: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #008543;
+    color: #ffffff;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.service-card:hover {
+    transform: scale(1.05);
+}
+
+.service-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.service-card h3 {
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+.service-card p {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .services-cards {
+        flex-wrap: wrap;
+        /* Revert to normal wrap for smaller screens */
+    }
+}
+
+/* Icon link styles */
+.icon-link {
+    font-size: 34px;
+    color: #ffffff;
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+/* Facebook icon specific styling */
+.icon-link.facebook i {
+    color: #34a853;
+    /* Facebook blue color */
+}
+
+/* Phone number icon specific styling */
+.icon-link.phone i {
+    color: #34a853;
+    /* Google green color for phone */
+}
+
+.services-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+/* Style for each service card */
+.service-card {
+    width: 30%;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #008543;
+    color: #ffffff;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    box-sizing: border-box;
+    /* Include padding and border in the width calculation */
+}
+
+.service-card:hover {
+    transform: scale(1.05);
+}
+
+.service-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.service-card h3 {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.service-card p {
+    font-size: 12px;
+    margin-top: 5px;
+}

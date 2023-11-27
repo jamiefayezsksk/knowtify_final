@@ -37,14 +37,14 @@ class firebaseRDB
 
    public function insert($table, $data)
    {
-      $path = $this->url. "/$table.json";
+      $path = $this->url . "/$table.json";
       $grab = $this->grab($path, "POST", json_encode($data));
       return $grab;
    }
 
    public function update($table, $uniqueID, $data)
    {
-      $path = $this->url. "/$table/$uniqueID.json";
+      $path = $this->url . "/$table/$uniqueID.json";
       $grab = $this->grab($path, "PATCH", json_encode($data));
       return $grab;
    }

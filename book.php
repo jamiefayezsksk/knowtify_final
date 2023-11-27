@@ -5,38 +5,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mountain Top Specialty Clinic</title>
-    <link rel="stylesheet" href="styles_book.css">
+    <link rel="stylesheet" href="book_styles.css">
+    <!-- Add Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
 <body>
+
     <header>
         <div class="header-content">
             <section class="image-section">
                 <img src="clinic.png" alt="Clinic Logo">
             </section>
-            <div class="clinic-details">
-                <h1>Mountain Top Specialty Clinic</h1>
-                <p>Your Trusted Healthcare Partner</p>
-                <p class="contact-info">
-                    <strong>Contact:</strong> 0977 062 5890<br>
-                    <strong>Address:</strong> 101 General Luna Road, Global Multispecialty Diagnostic Center, 2nd Floor,
-                    Unit 4, Baguio City, Philippines
-                </p>
-            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Specialties</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#appointments">Book an Appointment</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <nav>
-        <ul>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#appointment">Book an Appointment</a></li>
-            <li><a href="#services">Our Specialties</a></li>
-        </ul>
-    </nav>
+
+    <section id="appointment" class="section">
+        <div class="container">
+            <h1>Elevate Your Health Journey:
+                Seamless Booking,Exceptional Care
+                <br>at Mountain Top Specialty Clinic.
+            </h1>
+            <div class="flex-container">
+                <div class="button-container">
+                    <button onclick="location.href='#appointments'" class="book-appointment-btn">Book an
+                        Appointment</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section id="about" class="section">
         <div class="container">
             <h2>About Us</h2>
+            <p>Your go-to clinic in Baguio City, with specialists in IM, Pedia, Pulmo, IDS, Hema, Ortho, OB, & Rehab.
+            </p>
             <p>Welcome to Mountain Top Specialty Clinic, where your health is our priority. Our dedicated team of
                 healthcare professionals is committed to providing high-quality, compassionate care to our community.
             </p>
@@ -45,12 +58,12 @@
                 you.</p>
         </div>
     </section>
-
-    <section id="appointment" class="section">
+    <section id="appointments" class="section">
         <div class="container">
             <h2>Book an Appointment</h2>
             <p>Ready to prioritize your health? Schedule an appointment with our experienced healthcare professionals.
             </p>
+            <br>
             <?php
             // Include the backend file (replace 'backend.php' with the actual filename)
             include_once 'backend.php';
@@ -63,7 +76,7 @@
             // Styling
             $clinicNameStyle = "font-size: 36px; color: #2b9348; font-weight: bold;";
             $headerStyle = "font-size: 24px; color: #007f5f; font-weight: bold;";
-            $buttonStyle = "background-color: #2b9348; color: #ffffff; font-weight: bold;";
+            $buttonStyle = "background-color: #63962D; color: #ffffff; font-weight: bold;";
 
             // Handle form submission
             if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['book_button'])) {
@@ -76,32 +89,31 @@
                 $appointmentDate = $_POST['appointment_date'];
                 $appointmentTime = $_POST['appointment_time'];
 
-
                 // Display a summary of booking details
                 echo "
-            <div style='position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; backdrop-filter: blur(5px); z-index: 999;'></div>
-            <div style='position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #f4f4f4; padding: 20px; box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1); z-index: 1000;'>
-            <h2>Booking Details Summary</h2>
-            <p><strong>Patient's Full Name:</strong> $patientName</p>
-            <p><strong>Contact Number:</strong> $contactNumber</p>
-            <p><strong>Patient's Age:</strong> $patientAge</p>
-            <p><strong>Patient's Address:</strong> $patientAddress</p>
-            <p><strong>Reason for Appointment:</strong> $patientConcern</p>
-            <p><strong>Type of Doctor to Consult:</strong> $doctorType</p>
-            <p><strong>Appointment Date:</strong> $appointmentDate</p>
-            <p><strong>Appointment Time:</strong> $appointmentTime</p>
-            <button onclick=\"showSuccessMessage()\">Confirm Booking</button>
-            <button onclick=\"redirectToLandingPage()\">Exit</button>
-        </div>
-        <script>
-            function showSuccessMessage() {
-                alert('Booking successful! Check your SMS for details.');
-                redirectToLandingPage();
-            }
+            <div class='booking-summary-overlay'></div>
+            <div class='booking-summary-container'>
+                <h2>Booking Details Summary</h2>
+                <p><strong>Patient's Full Name:</strong> $patientName</p>
+                <p><strong>Contact Number:</strong> $contactNumber</p>
+                <p><strong>Patient's Age:</strong> $patientAge</p>
+                <p><strong>Patient's Address:</strong> $patientAddress</p>
+                <p><strong>Reason for Appointment:</strong> $patientConcern</p>
+                <p><strong>Type of Doctor to Consult:</strong> $doctorType</p>
+                <p><strong>Appointment Date:</strong> $appointmentDate</p>
+                <p><strong>Appointment Time:</strong> $appointmentTime</p>
+                <button onclick=\"showSuccessMessage()\">Confirm Booking</button>
+                <button onclick=\"redirectToLandingPage()\">Exit</button>
+            </div>
+            <script>
+                function showSuccessMessage() {
+                    alert('Booking successful! Check your SMS for details.');
+                    redirectToLandingPage();
+                }
 
-            function redirectToLandingPage() {
-                window.location.href = 'book.php'; // 
-            }
+                function redirectToLandingPage() {
+                    window.location.href = 'book.php'; // 
+                }
         
         </script>";
             }
@@ -129,7 +141,17 @@
             $doctorType = isset($_POST['doctor_type']) ? $_POST['doctor_type'] : 'General Practitioner';
             $appointmentDate = isset($_POST['appointment_date']) ? $_POST['appointment_date'] : '';
             $appointmentTime = isset($_POST['appointment_time']) ? $_POST['appointment_time'] : '';
-            echo "<label>Type of Doctor to Consult: <select name='doctor_type'><option value='General Practitioner' " . ($doctorType == 'General Practitioner' ? 'selected' : '') . ">General Practitioner</option><option value='Specialist' " . ($doctorType == 'Specialist' ? 'selected' : '') . ">Specialist</option></select></label><br>";
+            echo "<label>Type of Doctor to Consult: 
+                <select name='doctor_type'>
+                    <option value='Internal Medicine' " . ($doctorType == 'Internal Medicine' ? 'selected' : '') . ">Internal Medicine</option>
+                    <option value='Pulmonology' " . ($doctorType == 'Pulmonology' ? 'selected' : '') . ">Pulmonology</option>
+                    <option value='Orthopedics' " . ($doctorType == 'Orthopedics' ? 'selected' : '') . ">Orthopedics</option>
+                    <option value='Physical' " . ($doctorType == 'Physical' ? 'selected' : '') . ">Physical</option>
+                    <option value='Obstetrics and Gynecology' " . ($doctorType == 'Obstetrics and Gynecology' ? 'selected' : '') . ">Obstetrics and Gynecology</option>
+                    <option value='Pediatrics' " . ($doctorType == 'Pediatrics' ? 'selected' : '') . ">Pediatrics</option>
+                    <option value='Internal Medicine Infectious Diseases' " . ($doctorType == 'Internal Medicine Infectious Diseases' ? 'selected' : '') . ">Internal Medicine Infectious Diseases</option>
+                </select>
+      </label><br>";
             echo "<label>Appointment Date: <input type='date' name='appointment_date' value='$appointmentDate'></label><br>";
             echo "<label>Appointment Time: <input type='time' name='appointment_time' value='$appointmentTime'></label>";
             echo "</div>";
@@ -144,29 +166,49 @@
         </div>
     </section>
 
+    <section id="contact" class="section">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>
+                <i class="fas fa-phone-alt"></i> 0977 062 5890
+                &nbsp;&nbsp;&nbsp;
+                <i class="fab fa-facebook-square"></i>
+                <a href="https://www.facebook.com/MountainTopClinic" target="_blank">Mountain Top Specialty Clinic</a>
+            </p>
+            <br>
+            <h2>Visit Us at</h2>
+            <p>101 General Luna Road, Global Multispecialty Diagnostic Center, 2nd Floor, Unit 4, Baguio City,
+                Philippines</p>
+        </div>
+    </section>
+
+
     <section id="services" class="section">
         <div class="container">
             <h2>Our Specialties</h2>
             <div class="services-cards">
                 <div class="service-card">
+                    <img src="internalmed.jpg" alt="Internal Medicine">
+                    <h3>Internal Medicine</h3>
+                    <p>Specialized care for Adult Diseases.</p>
+                </div>
+                <div class="service-card">
                     <img src="internal.jpg" alt="General Medicine">
                     <h3>Internal Medicine</h3>
+                    <h4>(Adult Hematology)</h4>
                     <p>Comprehensive healthcare for all ages.</p>
                 </div>
                 <div class="service-card">
+                    <img src="infectious.jpg" alt="Internal Medicine and Infectious Diseases">
+                    <h3>Internal Medicine</h3>
+                    <h4>(Infectious Diseases)</h4>
+                    <p>Specialized care for Infectious Diseases.</p>
+                </div>
+                <div class="service-card">
                     <img src="pulmonology.jpg" alt="Pulmonology">
-                    <h3>Pulmonology</h3>
+                    <h3>Internal Medicine</h3>
+                    <h4>(Pulmonology)</h4>
                     <p>Specialized care for heart health.</p>
-                </div>
-                <div class="service-card">
-                    <img src="generl.jpg" alt="Orthopedics">
-                    <h3>Orthopedics</h3>
-                    <p>Expertise in musculoskeletal conditions.</p>
-                </div>
-                <div class="service-card">
-                    <img src="physical.jpg" alt="Dermatology">
-                    <h3>Physical</h3>
-                    <p>Diagnosis and treatment of skin conditions.</p>
                 </div>
                 <div class="service-card">
                     <img src="ob.jpg" alt="Obstetrics and Gynecology">
@@ -174,8 +216,19 @@
                     <p>Women's health and reproductive care.</p>
                 </div>
                 <div class="service-card">
+                    <img src="generl.jpg" alt="Orthopedics">
+                    <h3>General Orthopaedic Surgery</h3>
+                    <p>Expertise in musculoskeletal conditions.</p>
+                </div>
+                <div class="service-card">
+                    <img src="physical.jpg" alt="Dermatology">
+                    <h3>Physical Medicine and Rehabilitation</h3>
+                    <p>Diagnosis and treatment of skin conditions.</p>
+                </div>
+
+                <div class="service-card">
                     <img src="pedia.jpg" alt="Pediatrics">
-                    <h3>Pediatrics</h3>
+                    <h3>Pediatrics, Vaccines, and Immunizations</h3>
                     <p>Specialized care for children's health.</p>
                 </div>
             </div>
@@ -186,6 +239,12 @@
     <footer>
         <div class="container">
             <p>&copy; 2023 Mountain Top Specialty Clinic. All rights reserved.</p>
+            <a href="https://www.facebook.com/YourClinic" target="_blank" class="icon-link">
+                <i class="fab fa-facebook-square"></i>
+            </a>
+            <a href="tel:+1234567890" class="icon-link">
+                <i class="fas fa-phone-alt"></i>
+            </a>
         </div>
     </footer>
 

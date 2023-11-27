@@ -1,6 +1,6 @@
 body {
     font-family: 'Arial', sans-serif;
-    margin: 20px;
+    margin: 10px;
     background-color: #f0f0f0;
     display: flex;
     justify-content: space-between;
@@ -10,6 +10,7 @@ body {
     width: 100%;
     text-align: center;
 }
+
 
 h2 {
     text-align: center;
