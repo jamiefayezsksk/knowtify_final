@@ -1,4 +1,10 @@
 <?php
+// Include necessary files and initialize Firebase
+include("config.php");
+include("firebaseRDB.php");
+include('secretary_sidebar.php');
+$db = new firebaseRDB($databaseURL);
+
 // Get the current month and year
 $month = isset($_GET['month']) ? $_GET['month'] : date('n');
 $year = isset($_GET['year']) ? $_GET['year'] : date('Y');
@@ -51,21 +57,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
-    <link rel="stylesheet" href="style.css"> <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="dash_style.css"> <!-- Link to the external CSS file -->
 </head>
 
 <body>
     <?php
-    include("config.php");
-    include("firebaseRDB.php");
-    include('sidebar.php');
+
     $db = new firebaseRDB($databaseURL);
     ?>
     <div class="main-content">
         <main>
+
             <!-- calendar-->
-            <br>
-            <br>
+
             <div class="content-container">
                 <a href="?month=<?= $prevMonth ?>&year=<?= $prevYear ?>">Previous Month</a>
                 <span>
@@ -99,8 +103,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         // Display the days of the month
                         for ($currentDay = 1; $currentDay <= $numDays; $currentDay++) {
                             $currentDate = strtotime("$year-$month-$currentDay");
-                            echo "<td>";
-                            echo "<div class='day-number' onclick='addEvent($currentDay)'>$currentDay</div>";
+                            // Add an event listener to each calendar cell
+                            echo "<td onclick='addEvent(\"$year-$month-$currentDay\")'>";
+                            echo "<div class='day-number'>$currentDay</div>";
+
 
                             // Display events for the current day
                             if (isset($events["$year-$month-$currentDay"])) {
@@ -169,13 +175,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <script>
-                    function showEventForm(day) {
+                    function showEventForm(dateString) {
                         var formContainer = document.getElementById('event-form-container');
                         var overlay = document.getElementById('overlay');
-                        var selectedDayInput = document.getElementById('selected-day');
+                        var selectedDateInput = document.getElementById('selected-date');
 
-                        if (day) {
-                            selectedDayInput.value = day;
+                        if (dateString) {
+                            selectedDateInput.value = dateString;
                         }
 
                         formContainer.style.display = 'block';
@@ -214,14 +220,77 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         }
                     }
 
+                    function viewCalendar(type) {
+                        var today = new Date();
+                        var currentMonth = today.getMonth() + 1; // Months are zero-indexed
+                        var currentYear = today.getFullYear();
+
+                        switch (type) {
+                            case 'today':
+                                window.location.href = '?month=' + currentMonth + '&year=' + currentYear + '&day=' + today.getDate();
+                                break;
+                            case 'week':
+                                // Specify the number of days to view for the weekly view
+                                var daysToShow = 7;
+                                // Calculate the start date based on the number of days to show
+                                var startOfWeek = new Date(today);
+                                startOfWeek.setDate(today.getDate() - daysToShow + 1);
+                                window.location.href = '?view=week&start=' + formatDateString(startOfWeek) + '&end=' + formatDateString(today) + '&days=' + daysToShow;
+                                break;
+                            case 'month':
+                                window.location.href = '?month=' + currentMonth + '&year=' + currentYear;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    function formatDateString(date) {
+                        // Helper function to format the date as 'YYYY-MM-DD'
+                        return date.toISOString().slice(0, 10);
+                    }
+
+                    /// Event handlers for the buttons
+                    function viewToday() {
+                        var today = new Date();
+                        var currentMonth = today.getMonth() + 1;
+                        var currentYear = today.getFullYear();
+                        var currentDay = today.getDate();
+
+                        window.location.href = '?month=' + currentMonth + '&year=' + currentYear + '&day=' + currentDay;
+                    }
+
+                    function viewThisWeek() {
+                        // Specify the number of days to view for the weekly view
+                        var daysToShow = 7;
+                        // Calculate the start date based on the number of days to show
+                        var startOfWeek = new Date();
+                        startOfWeek.setDate(startOfWeek.getDate() - daysToShow + 1);
+                        window.location.href = '?view=week&start=' + formatDateString(startOfWeek) + '&end=' + formatDateString(new Date()) + '&days=' + daysToShow;
+                    }
+
+                    function viewThisMonth() {
+                        viewCalendar('month');
+                    }
+
+
                     // Added function to handle click on calendar cell
-                    function addEvent(day) {
-                        showEventForm(day);
+                    function addEvent(dateString) {
+                        showEventForm(dateString);
                     }
                 </script>
-
         </main>
 
+    </div>
+    <div class="right-side">
+        <?php include('admin_appointments.php'); ?>
+
+        <!-- Small calendar to reflect events -->
+        <div class="small-calendar">
+            <h3>Events Calendar</h3>
+            <!-- Add your small calendar content here -->
+            <!-- For example, display events for the current month -->
+        </div>
     </div>
 
 </body>

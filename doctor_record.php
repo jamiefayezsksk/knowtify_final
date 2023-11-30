@@ -1,7 +1,7 @@
 <?php
 include("config.php");
 include("firebaseRDB.php");
-include('sidebar.php');
+include('doctor_sidebar.php');
 
 $db = new firebaseRDB($databaseURL);
 ?>

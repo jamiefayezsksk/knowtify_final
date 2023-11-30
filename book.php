@@ -124,7 +124,7 @@
             echo "<div style='flex: 1;'>";
             $patientName = isset($_POST['patient_name']) ? $_POST['patient_name'] : '';
             $contactNumber = isset($_POST['contact_number']) ? $_POST['contact_number'] : '';
-            $patientAge = isset($_POST['patient_age']) ? $_POST['patient_age'] : 25;
+            $patientAge = isset($_POST['patient_age']) ? $_POST['patient_age'] : 0;
             echo "<label>Patient's Full Name: <input type='text' name='patient_name' value='$patientName'></label><br>";
             echo "<label>Contact Number: <input type='text' name='contact_number' value='$contactNumber'></label><br>";
             echo "<label>Patient's Age: <input type='number' name='patient_age' min='0' max='150' value='$patientAge'></label>";

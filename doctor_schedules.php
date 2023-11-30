@@ -55,260 +55,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Doctor Dashboard</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
     <link rel="stylesheet" href="dash_style.css"> <!-- Link to the external CSS file -->
-    <style>
-        /* Add your custom styles here */
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        header {
-            background-color: #008543;
-            color: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-welcome,
-        .search-wrapper,
-        .social-icons {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-welcome span,
-        .search-wrapper input,
-        .social-icons span {
-            margin-right: 1px;
-        }
-
-        main {
-            flex: 1;
-            padding: 10px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .user-profile span {
-            width: 50px;
-            height: 50px;
-            background-color: #008543;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .dash-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .dash-cards {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .card-single {
-            flex: 1;
-            margin-right: 20px;
-            background-color: #ecf0f1;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .card-body {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .card-body span {
-            font-size: 36px;
-            margin-right: 10px;
-        }
-
-        .card-footer {
-            background-color: #008543;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .card-footer a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .content-container {
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            padding: 15px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #008543;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .event-form {
-            display: none;
-            position: absolute;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 0;
-        }
-
-        .recent {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .activity-card {
-            flex: 1;
-            background-color: #ecf0f1;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-right: 20px;
-        }
-
-        .table-responsive {
-            overflow-y: auto;
-        }
-
-        .small-calendar {
-            background-color: #ecf0f1;
-            border-radius: 10px;
-            overflow: hidden;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            flex-basis: 30%;
-        }
-    </style>
 </head>
 
 <body>
+    <?php
+
+    $db = new firebaseRDB($databaseURL);
+    ?>
     <div class="main-content">
-        <header>
-            <div class="user-welcome">
-                <span>Welcome, Doctor!</span>
-            </div>
-            <div class="search-wrapper">
-                <span class="ti-search"></span>
-                <input type="search" placeholder="Search">
-            </div>
-            <div class="social-icons">
-                <span class="ti-bell"></span>
-                <div></div>
-            </div>
-        </header>
         <main>
-            <div class="user-profile">
-                <span class="profile"></span>
-                <span class="name"></span>
-                <div></div>
-            </div>
-            <h2 class="dash-title">Overview</h2>
 
-            <div class="dash-cards">
-                <div class="card-single">
-                    <div class="card-body">
-                        <span class="ti-briefcase"></span>
-                        <div>
-                            <h5>Appointments</h5>
-                            <h4>10+ patients</h4>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="appointment.php">View all</a>
-                    </div>
-                </div>
-
-                <div class="card-single">
-                    <div class="card-body">
-                        <span class="ti-reload"></span>
-                        <div>
-                            <h5>Pending</h5>
-                            <h4>3 patients</h4>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="appointment.php">View all</a>
-                    </div>
-                </div>
-
-                <div class="card-single">
-                    <div class="card-body">
-                        <span class="ti-check-box"></span>
-                        <div>
-                            <h5>Processed</h5>
-                            <h4>2 patients</h4>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="appointment.php">View all</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calendar -->
+            <!-- calendar-->
 
             <div class="content-container">
                 <a href="?month=<?= $prevMonth ?>&year=<?= $prevYear ?>">Previous Month</a>
@@ -347,6 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo "<td onclick='addEvent(\"$year-$month-$currentDay\")'>";
                             echo "<div class='day-number'>$currentDay</div>";
 
+
                             // Display events for the current day
                             if (isset($events["$year-$month-$currentDay"])) {
                                 foreach ($events["$year-$month-$currentDay"] as $event) {
@@ -371,6 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 echo '</tr><tr>';
                             }
                         }
+
 
                         // Fill in the blanks for the last week
                         for ($i = date('w', strtotime("$year-$month-$numDays")) + 1; $i <= 6; $i++) {
@@ -412,8 +174,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </form>
                 </div>
 
-                <div id="overlay" class="overlay"></div>
-
                 <script>
                     function showEventForm(dateString) {
                         var formContainer = document.getElementById('event-form-container');
@@ -435,6 +195,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         overlay.style.display = 'none';
                     }
 
+                    function viewCalendar(type) {
+                        var today = new Date();
+                        var currentMonth = today.getMonth() + 1; // Months are zero-indexed
+                        var currentYear = today.getFullYear();
+
+                        switch (type) {
+                            case 'today':
+                                window.location.href = '?month=' + currentMonth + '&year=' + currentYear + '&day=' + today.getDate();
+                                break;
+                            case 'week':
+                                // Calculate the start and end of the week
+                                var startOfWeek = new Date(today);
+                                startOfWeek.setDate(today.getDate() - today.getDay());
+                                var endOfWeek = new Date(today);
+                                endOfWeek.setDate(today.getDate() - today.getDay() + 6);
+                                window.location.href = '?view=week&start=' + startOfWeek.toISOString().slice(0, 10) + '&end=' + endOfWeek.toISOString().slice(0, 10);
+                                break;
+                            case 'month':
+                                window.location.href = '?month=' + currentMonth + '&year=' + currentYear;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    function viewCalendar(type) {
+                        var today = new Date();
+                        var currentMonth = today.getMonth() + 1; // Months are zero-indexed
+                        var currentYear = today.getFullYear();
+
+                        switch (type) {
+                            case 'today':
+                                window.location.href = '?month=' + currentMonth + '&year=' + currentYear + '&day=' + today.getDate();
+                                break;
+                            case 'week':
+                                // Specify the number of days to view for the weekly view
+                                var daysToShow = 7;
+                                // Calculate the start date based on the number of days to show
+                                var startOfWeek = new Date(today);
+                                startOfWeek.setDate(today.getDate() - daysToShow + 1);
+                                window.location.href = '?view=week&start=' + formatDateString(startOfWeek) + '&end=' + formatDateString(today) + '&days=' + daysToShow;
+                                break;
+                            case 'month':
+                                window.location.href = '?month=' + currentMonth + '&year=' + currentYear;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    function formatDateString(date) {
+                        // Helper function to format the date as 'YYYY-MM-DD'
+                        return date.toISOString().slice(0, 10);
+                    }
+
+                    /// Event handlers for the buttons
                     function viewToday() {
                         var today = new Date();
                         var currentMonth = today.getMonth() + 1;
@@ -445,9 +261,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
 
                     function viewThisWeek() {
+                        // Specify the number of days to view for the weekly view
                         var daysToShow = 7;
-                        var startOfWeek = new
-                            Date();
+                        // Calculate the start date based on the number of days to show
+                        var startOfWeek = new Date();
                         startOfWeek.setDate(startOfWeek.getDate() - daysToShow + 1);
                         window.location.href = '?view=week&start=' + formatDateString(startOfWeek) + '&end=' + formatDateString(new Date()) + '&days=' + daysToShow;
                     }
@@ -462,65 +279,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         showEventForm(dateString);
                     }
                 </script>
-            </div>
-            <section class="recent">
-                <div class="activity-grid">
-                    <div class="activity-card">
-                        <h3><a href="doctor_record.php">Patient Record</a></h3>
-
-                        <div class="table-responsive">
-                            <table>
-                                <tr>
-                                    <th>Patient Information</th>
-                                    <th>Visit</th>
-                                    <th>History</th>
-                                    <th>Diagnosis</th>
-                                    <th>Upcoming Appointments</th>
-                                    <th>Doctor's Notes</th>
-                                    <th colspan="3">Action</th>
-                                </tr>
-                                <?php
-                                $data = $db->retrieve("film");
-                                $data = json_decode($data, true);
-
-                                if (is_array($data)) {
-                                    foreach ($data as $id => $film) {
-                                        $patient = isset($film['patient']) ? $film['patient'] : '';
-                                        $visit = isset($film['visit']) ? $film['visit'] : '';
-                                        $history = isset($film['history']) ? $film['history'] : '';
-                                        $diagnosis = isset($film['diagnosis']) ? $film['diagnosis'] : '';
-                                        $appointment = isset($film['appointment']) ? $film['appointment'] : '';
-                                        $notes = isset($film['notes']) ? $film['notes'] : '';
-
-                                        echo "<tr>
-                                            <td><a href='name.php?id=$id'>$patient</a></td>
-                                            <td>$visit</td>
-                                            <td>$history</td>
-                                            <td>$diagnosis</td>
-                                            <td>$appointment</td>
-                                            <td>$notes</td>
-                                            <td><a href='edit.php?id=$id'>EDIT</a></td>
-                                            <td><a href='delete.php?id=$id'>DELETE</a></td>
-                                            </tr>";
-                                    }
-                                }
-                                ?>
-                            </table>
-                            <a href="add.php"><button>ADD DATA</button></a><br><br>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </main>
+
     </div>
     <div class="right-side">
         <?php include('appointment.php'); ?>
 
         <!-- Small calendar to reflect events -->
         <div class="small-calendar">
-            <!-- ... (your small calendar content remains unchanged) ... -->
+            <h3>Events Calendar</h3>
+            <!-- Add your small calendar content here -->
+            <!-- For example, display events for the current month -->
         </div>
     </div>
+
 </body>
 
 </html>

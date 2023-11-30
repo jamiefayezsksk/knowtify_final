@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
 
         <input type="submit" name="register" value="REGISTER"><br>
 
-        <p class="login-link">Already have an account? <a href="login.php">Login here</a>.</p>
+        <p class="login-link">Already have an account? <a href="index.php">Login here</a>.</p>
     </form>
 </body>
 
