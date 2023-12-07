@@ -5,28 +5,6 @@ include("firebaseRDB.php");
 include('doctor_sidebar.php');
 $db = new firebaseRDB($databaseURL);
 
-// Get the current month and year
-$month = isset($_GET['month']) ? $_GET['month'] : date('n');
-$year = isset($_GET['year']) ? $_GET['year'] : date('Y');
-
-// Get the selected day (if any)
-$day = isset($_GET['day']) ? $_GET['day'] : null;
-
-// Get the start and end dates for the week (if applicable)
-$startOfWeek = isset($_GET['start']) ? $_GET['start'] : null;
-$endOfWeek = isset($_GET['end']) ? $_GET['end'] : null;
-
-// Get the first day of the month
-$firstDay = strtotime("$year-$month-01");
-
-// Get the number of days in the month
-$numDays = date('t', $firstDay);
-
-// Get the previous and next month and year
-$prevMonth = date('n', strtotime('-1 month', $firstDay));
-$prevYear = date('Y', strtotime('-1 month', $firstDay));
-$nextMonth = date('n', strtotime('+1 month', $firstDay));
-$nextYear = date('Y', strtotime('+1 month', $firstDay));
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -57,7 +35,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Doctor Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
-    <link rel="stylesheet" href="dash_style.css"> <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="dash_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+
     <style>
         /* Add your custom styles here */
         body {
@@ -308,161 +288,136 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
 
-            <!-- Calendar -->
+            <!-- FullCalendar -->
+            <div id="calendar"></div>
 
-            <div class="content-container">
-                <a href="?month=<?= $prevMonth ?>&year=<?= $prevYear ?>">Previous Month</a>
-                <span>
-                    <?= date('F Y', $firstDay) ?>
-                </span>
-                <a href="?month=<?= $nextMonth ?>&year=<?= $nextYear ?>">Next Month</a>
-                <!-- Add Event Button -->
-                <!-- Add buttons to view today, this week, and this month -->
-                <button onclick="viewToday()">Today</button>
-                <button onclick="viewThisWeek()">Week</button>
-                <button onclick="viewThisMonth()">Month</button>
-                <a href="#" class="add-event-btn" onclick="showEventForm()">Add Schedule</a>
+            <!-- FullCalendar JavaScript -->
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
 
-                <table>
-                    <tr>
-                        <th>Sun</th>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
-                    </tr>
-                    <tr>
-                        <?php
-                        // Fill in the blanks for the first week
-                        for ($i = 0; $i < date('w', $firstDay); $i++) {
-                            echo '<td></td>';
-                        }
-
-                        // Display the days of the month
-                        for ($currentDay = 1; $currentDay <= $numDays; $currentDay++) {
-                            $currentDate = strtotime("$year-$month-$currentDay");
-                            // Add an event listener to each calendar cell
-                            echo "<td onclick='addEvent(\"$year-$month-$currentDay\")'>";
-                            echo "<div class='day-number'>$currentDay</div>";
-
-                            // Display events for the current day
-                            if (isset($events["$year-$month-$currentDay"])) {
-                                foreach ($events["$year-$month-$currentDay"] as $event) {
-                                    echo "<div class='event'>";
-                                    echo "<div class='event-description'>{$event['description']}</div>";
-
-                                    // Display additional appointment details
-                                    echo "<div class='event-details'>";
-                                    echo "<div><strong>Patient:</strong> {$event['patient']}</div>";
-                                    echo "<div><strong>Time:</strong> {$event['time']}</div>";
-                                    // Add more details as needed
-                                    echo "</div>";
-
-                                    echo "</div>";
+            <script>
+                $(document).ready(function () {
+                    var calendar = $('#calendar').fullCalendar({
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,agendaWeek,agendaDay'
+                        },
+                        buttonText: {
+                            today: 'Today',
+                            month: 'Month',
+                            week: 'Week',
+                            day: 'Day'
+                        },
+                        events: function (start, end, timezone, callback) {
+                            // Fetch events from your data source (replace this with your actual data source)
+                            $.ajax({
+                                url: 'your_data_source.php',
+                                type: 'POST',
+                                dataType: 'json',
+                                success: function (response) {
+                                    var events = [];
+                                    // Process your data and populate 'events' array
+                                    callback(events);
                                 }
-                            }
-
-                            echo "</td>";
-
-                            // Start a new row every Sunday
-                            if (date('w', $currentDate) == 6) {
-                                echo '</tr><tr>';
-                            }
+                            });
+                        },
+                        // Handle event click
+                        eventClick: function (calEvent, jsEvent, view) {
+                            alert('Event: ' + calEvent.title);
                         }
+                    });
 
-                        // Fill in the blanks for the last week
-                        for ($i = date('w', strtotime("$year-$month-$numDays")) + 1; $i <= 6; $i++) {
-                            echo '<td></td>';
-                        }
-                        ?>
-                    </tr>
-                </table>
-
-                <!-- Event Form -->
-                <div id="event-form-container" class="event-form">
-                    <h3>Add Schedule</h3>
-                    <form id="event-form" method="post" action="">
-                        <label for="event-description">Event Description:</label>
-                        <input type="hidden" id="selected-date" name="day" value="">
-                        <input type="text" id="event-description" name="event_description" required>
-                        <br>
-
-                        <!-- Additional patient health record fields -->
-                        <div class="form-group">
-                            <label class="form-label" for="patient">Patient Name:</label>
-                            <input class="form-input" type="text" name="patient">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="date_of_birth">Date of Birth:</label>
-                            <input class="form-input" type="text" name="date_of_birth">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="gender">Gender:</label>
-                            <input class="form-input" type="text" name="gender">
-                        </div>
-
-                        <!-- Add more patient health record fields as needed -->
-
-                        <input type="submit" value="Save">
-                        <a href="#" onclick="hideEventForm()">Cancel</a>
-                    </form>
-                </div>
-
-                <div id="overlay" class="overlay"></div>
-
-                <script>
+                    // Function to show the event form
                     function showEventForm(dateString) {
-                        var formContainer = document.getElementById('event-form-container');
-                        var overlay = document.getElementById('overlay');
-                        var selectedDateInput = document.getElementById('selected-date');
-
-                        if (dateString) {
-                            selectedDateInput.value = dateString;
-                        }
-
-                        formContainer.style.display = 'block';
-                        overlay.style.display = 'block';
+                        // Implement your logic to show the form
                     }
 
+                    // Function to hide the event form
                     function hideEventForm() {
-                        var formContainer = document.getElementById('event-form-container');
-                        var overlay = document.getElementById('overlay');
-                        formContainer.style.display = 'none';
-                        overlay.style.display = 'none';
+                        // Implement your logic to hide the form
                     }
 
+                    // Function to view today
                     function viewToday() {
-                        var today = new Date();
-                        var currentMonth = today.getMonth() + 1;
-                        var currentYear = today.getFullYear();
-                        var currentDay = today.getDate();
-
-                        window.location.href = '?month=' + currentMonth + '&year=' + currentYear + '&day=' + currentDay;
+                        calendar.fullCalendar('today');
                     }
 
+                    // Function to view this week
                     function viewThisWeek() {
-                        var daysToShow = 7;
-                        var startOfWeek = new
-                            Date();
-                        startOfWeek.setDate(startOfWeek.getDate() - daysToShow + 1);
-                        window.location.href = '?view=week&start=' + formatDateString(startOfWeek) + '&end=' + formatDateString(new Date()) + '&days=' + daysToShow;
+                        calendar.fullCalendar('changeView', 'agendaWeek');
                     }
 
+                    // Function to view this month
                     function viewThisMonth() {
-                        viewCalendar('month');
+                        calendar.fullCalendar('changeView', 'month');
                     }
+                });
+            </script>
 
+            <!-- Event Form -->
+            <div id="event-form-container" class="event-form">
+                <h3>Add Schedule</h3>
+                <form id="event-form" method="post" action="">
+                    <label for="event-description">Event Description:</label>
+                    <input type="hidden" id="selected-date" name="day" value="">
+                    <input type="text" id="event-description" name="event_description" required>
+                    <br>
 
-                    // Added function to handle click on calendar cell
-                    function addEvent(dateString) {
-                        showEventForm(dateString);
-                    }
-                </script>
+                    <!-- Additional patient health record fields -->
+                    <div class="form-group">
+                        <label class="form-label" for="patient">Patient Name:</label>
+                        <input class="form-input" type="text" name="patient">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="date_of_birth">Date of Birth:</label>
+                        <input class="form-input" type="text" name="date_of_birth">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="gender">Gender:</label>
+                        <input class="form-input" type="text" name="gender">
+                    </div>
+
+                    <!-- Add more patient health record fields as needed -->
+
+                    <input type="submit" value="Save">
+                    <a href="#" onclick="hideEventForm()">Cancel</a>
+                </form>
             </div>
+
+            <div id="overlay" class="overlay"></div>
+
+            <script>
+                function showEventForm(dateString) {
+                    var formContainer = document.getElementById('event-form-container');
+                    var overlay = document.getElementById('overlay');
+                    var selectedDateInput = document.getElementById('selected-date');
+
+                    if (dateString) {
+                        selectedDateInput.value = dateString;
+                    }
+
+                    formContainer.style.display = 'block';
+                    overlay.style.display = 'block';
+                }
+
+                function hideEventForm() {
+                    var formContainer = document.getElementById('event-form-container');
+                    var overlay = document.getElementById('overlay');
+                    formContainer.style.display = 'none';
+                    overlay.style.display = 'none';
+                }
+
+
+                // Added function to handle click on calendar cell
+                function addEvent(dateString) {
+                    showEventForm(dateString);
+                }
+            </script>
+
             <section class="recent">
                 <div class="activity-grid">
                     <div class="activity-card">

@@ -8,6 +8,44 @@
     <link rel="stylesheet" href="book_styles.css">
     <!-- Add Font Awesome CDN for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Add custom styles for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -58,6 +96,7 @@
                 you.</p>
         </div>
     </section>
+
     <section id="appointments" class="section">
         <div class="container">
             <h2>Book an Appointment</h2>
@@ -121,6 +160,8 @@
             // 3-column layout for the appointment form
             echo "<form method='post'>";
             echo "<div style='display: flex;'>";
+
+            // Patient details column
             echo "<div style='flex: 1;'>";
             $patientName = isset($_POST['patient_name']) ? $_POST['patient_name'] : '';
             $contactNumber = isset($_POST['contact_number']) ? $_POST['contact_number'] : '';
@@ -130,6 +171,7 @@
             echo "<label>Patient's Age: <input type='number' name='patient_age' min='0' max='150' value='$patientAge'></label>";
             echo "</div>";
 
+            // Patient address and concern column
             echo "<div style='flex: 1;'>";
             $patientAddress = isset($_POST['patient_address']) ? $_POST['patient_address'] : '';
             $patientConcern = isset($_POST['patient_concern']) ? $_POST['patient_concern'] : '';
@@ -137,26 +179,154 @@
             echo "<label>Reason for Appointment: <textarea name='patient_concern'>$patientConcern</textarea></label>";
             echo "</div>";
 
+            // Doctor selection, date, and time column
             echo "<div style='flex: 1;'>";
             $doctorType = isset($_POST['doctor_type']) ? $_POST['doctor_type'] : 'General Practitioner';
             $appointmentDate = isset($_POST['appointment_date']) ? $_POST['appointment_date'] : '';
             $appointmentTime = isset($_POST['appointment_time']) ? $_POST['appointment_time'] : '';
             echo "<label>Type of Doctor to Consult: 
-                <select name='doctor_type'>
+                <select name='doctor_type' id='doctorTypeSelect' onchange='updateTimeSlots()'>
                     <option value='Internal Medicine' " . ($doctorType == 'Internal Medicine' ? 'selected' : '') . ">Internal Medicine</option>
-                    <option value='Pulmonology' " . ($doctorType == 'Pulmonology' ? 'selected' : '') . ">Pulmonology</option>
-                    <option value='Orthopedics' " . ($doctorType == 'Orthopedics' ? 'selected' : '') . ">Orthopedics</option>
-                    <option value='Physical' " . ($doctorType == 'Physical' ? 'selected' : '') . ">Physical</option>
-                    <option value='Obstetrics and Gynecology' " . ($doctorType == 'Obstetrics and Gynecology' ? 'selected' : '') . ">Obstetrics and Gynecology</option>
-                    <option value='Pediatrics' " . ($doctorType == 'Pediatrics' ? 'selected' : '') . ">Pediatrics</option>
-                    <option value='Internal Medicine Infectious Diseases' " . ($doctorType == 'Internal Medicine Infectious Diseases' ? 'selected' : '') . ">Internal Medicine Infectious Diseases</option>
+                    <option value='Hematology' " . ($doctorType == 'Hematology' ? 'selected' : '') . ">Internal Medicine (Adult Hematology)</option>
+                    <option value='Infectious' " . ($doctorType == 'Infectious' ? 'selected' : '') . ">Internal Medicine (Infectious Diseases)</option>
+                    <option value='Pulmonology' " . ($doctorType == 'Infectious' ? 'selected' : '') . ">Internal Medicine (Pulmonology)</option>
+                    <option value='Ob " . ($doctorType == 'Ob' ? 'selected' : '') . ">Obstetrics and Gynecology</option>
+                    <option value='Orthopedics' " . ($doctorType == 'Orthopedics' ? 'selected' : '') . ">General Orthopaedic Surgery</option>
+                    <option value='Physical' " . ($doctorType == 'Physical' ? 'selected' : '') . ">Physical Medicine and Rehabilitation</option>
+                    <option value='Pediatrics' " . ($doctorType == 'Pediatrics' ? 'selected' : '') . ">Pediatrics, Vaccines, and Immunizations</option>
                 </select>
       </label><br>";
-            echo "<label>Appointment Date: <input type='date' name='appointment_date' value='$appointmentDate'></label><br>";
-            echo "<label>Appointment Time: <input type='time' name='appointment_time' value='$appointmentTime'></label>";
+            // Mock data for available days per doctor, replace this with your actual logic
+            $availableDays = array(
+                'Internal Medicine' => array('Monday', 'Wednesday', 'Thursday'),
+                'Hematology' => array('Monday', 'Wednesday', 'Friday'),
+                'Infectious' => array('Wednesday', 'Friday'),
+                'Pulmonology' => array('Tuesday', 'Thursday'),
+                'Ob' => array('Monday', 'Tuesday'),
+                'Orthopedics' => array('Monday', 'Tuesday', 'Thursday'),
+                'Physical' => array('Tuesday', 'Thursday'),
+                'Pediatrics' => array('Monday', 'Wednesday', 'Thursday', 'Saturday'),
+                // Add more doctors and their respective available days as needed
+            );
+
+            echo "<label>Appointment Date: 
+    <input type='date' name='appointment_date' id='appointmentDate' value='$appointmentDate' required>
+    <span id='unavailableDayError' style='color: red;'></span>
+</label><br>";
+
+            // JavaScript to enable/disable dates based on the selected doctor and show error for unavailable days
+            echo "<script>
+    function updateAvailableDays() {
+        var availableDays = " . json_encode($availableDays) . ";
+        var doctorTypeSelect = document.getElementById('doctorTypeSelect');
+        var appointmentDateInput = document.getElementById('appointmentDate');
+        var unavailableDayError = document.getElementById('unavailableDayError');
+        var selectedDoctor = doctorTypeSelect.value;
+
+        // Get the available days for the selected doctor
+        var doctorAvailableDays = availableDays[selectedDoctor];
+
+        // Enable all days by default
+        for (var i = 1; i <= 31; i++) {
+            var day = i < 10 ? '0' + i : '' + i;
+            var dateOption = appointmentDateInput.querySelector('option[value=\"' + day + '\"]');
+            dateOption.disabled = false;
+            dateOption.classList.remove('highlight-day'); // Remove highlight class
+        }
+
+        // Highlight days that are available
+        if (doctorAvailableDays) {
+            for (var i = 1; i <= 31; i++) {
+                var day = i < 10 ? '0' + i : '' + i;
+                var dateOption = appointmentDateInput.querySelector('option[value=\"' + day + '\"]');
+                var date = new Date(appointmentDateInput.value);
+                date.setDate(i);
+                var dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+
+                if (doctorAvailableDays.includes(dayOfWeek)) {
+                    dateOption.classList.add('highlight-day'); // Add highlight class
+                } else {
+                    dateOption.disabled = true;
+                }
+            }
+        }
+    }
+
+                // Initial call to update available days
+                updateAvailableDays();
+
+                // Add event listener to doctor type select
+                document.getElementById('doctorTypeSelect').addEventListener('change', function() {
+                    updateAvailableDays();
+                });
+
+                // Add event listener to appointment date input
+                document.getElementById('appointmentDate').addEventListener('change', function() {
+                    updateAvailableDays();
+                });
+            </script>";
+
+            // Mock data for time slots, you should replace this with your actual logic
+            $timeSlots = array(
+                'Internal Medicine' => array('03:00 PM', '3:30 AM', '04:00 PM', '04:30 PM'),
+                'Hematology' => array('1:00 AM', '02:00 PM', '04:00 PM'),
+                'Infectious' => array('09:00 AM', '10:00 AM', '02:00 PM', '04:00 PM'),
+                'Pulmonology' => array('10:00 AM', '10:30 PM', '11:0 PM', '11:30 PM', '12:00 PM', '12:30 PM'),
+                'Ob' => array('09:30 AM', '10:00 AM', '02:00 PM', '04:00 PM'),
+                'Orthopedics' => array('02:00 PM', '04:00 PM'),
+                'Physical' => array('10:00 AM', '02:00 PM', '04:00 PM'),
+                'Pediatrics' => array('09:00 AM', '09:30 AM', '10:00 PM', '10:30 PM', '11:00 PM', '11:30 PM', '12:00 PM'),
+
+                // Add more doctors and their respective time slots as needed
+            );
+
+            // Display a div for time slots
+            echo "<div id='timeSlotContainer'>";
+            echo "<label>Appointment Time: 
+                <select name='appointment_time' id='appointmentTimeSelect'>";
+            // Populate initial time slots based on the selected doctor
+            foreach ($timeSlots[$doctorType] as $slot) {
+                echo "<option value='$slot' " . ($appointmentTime == $slot ? 'selected' : '') . ">$slot</option>";
+            }
+            echo "</select>
+            </label>";
             echo "</div>";
 
             echo "</div>";
+
+            // JavaScript to generate and update time slots dynamically
+            echo "<script>
+            function generateTimeSlots() {
+                var timeSlots = " . json_encode($timeSlots) . ";
+                var doctorTypeSelect = document.getElementById('doctorTypeSelect');
+                var appointmentTimeSelect = document.getElementById('appointmentTimeSelect');
+                var selectedDoctor = doctorTypeSelect.value;
+
+                // Remove existing options
+                while (appointmentTimeSelect.options.length > 0) {
+                    appointmentTimeSelect.remove(0);
+                }
+
+                // Add new time slots based on the selected doctor
+                if (timeSlots[selectedDoctor]) {
+                    timeSlots[selectedDoctor].forEach(function(slot) {
+                        var option = document.createElement('option');
+                        option.value = slot;
+                        option.text = slot;
+                        appointmentTimeSelect.add(option);
+                    });
+                }
+            }
+
+            // Initial call to populate time slots
+            generateTimeSlots();
+
+            // Add event listener to doctor type select
+            document.getElementById('doctorTypeSelect').addEventListener('change', function() {
+                generateTimeSlots();
+            });
+        </script>";
+
 
             // Book Appointment button
             echo "<input type='submit' name='book_button' value='Book Appointment' style='$buttonStyle' onclick=\"if(confirm('Are you sure you want to book this appointment?')) { element.value=1; this.form.submit(); }\">";
